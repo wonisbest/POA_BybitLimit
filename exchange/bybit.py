@@ -265,6 +265,15 @@ class Bybit:
                     params = {"reduceOnly": True, "position_idx": position_idx}
                     
         price = order_info.price if order_info.type.lower() == "limit" else None
+
+        try:
+            open_orders = self.client.fetch_open_orders(symbol)
+            if open_orders:
+                for o in open_orders:
+                    if o["side"].lower() == "buy":
+                        self.client.cancel_order(o["id"], symbol)
+        except Exception as e:
+            print(f"미체결 주문 조회/취소 중 오류 발생: {e}")
         
         try:
             result = retry(
