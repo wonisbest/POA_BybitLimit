@@ -12,8 +12,7 @@ class Bybit:
             {
                 "apiKey": key,
                 "secret": secret,
-                "options": {"adjustForTimeDifference": True
-                           "recvWindow": 15000},
+                "options": {"adjustForTimeDifference": True, "recvWindow": 15000},
             }
         )
         self.client.load_markets()
