@@ -197,7 +197,7 @@ class OrderRequest(BaseModel):
     base: str
     quote: QUOTE_LITERAL
     # QUOTE
-    type: Literal["market", "limit"] = "market"
+    type: Literal["market", "limit", "cancel"] = "market"
     side: SIDE_LITERAL
     amount: float | None = None
     price: float | None = None
@@ -274,7 +274,7 @@ class OrderBase(OrderRequest):
 
 class MarketOrder(OrderBase):
     price: float | None = None
-    type: Literal["market", "limit"] = "market"
+    type: Literal["market", "limit", "cancel"] = "market"
 
 
 class PriceRequest(BaseModel):
