@@ -246,7 +246,7 @@ class Bybit:
         symbol = self.order_info.unified_symbol
         close_amount = self.get_amount(order_info)
 
-        if order_info.type == "cancel":
+        if order_info.order_name.lower() == "cancel":
             try:
                 open_orders = self.client.fetch_open_orders(symbol)
                 if open_orders:
