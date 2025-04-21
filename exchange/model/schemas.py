@@ -274,7 +274,7 @@ class OrderBase(OrderRequest):
 
 class MarketOrder(OrderBase):
     price: float | None = None
-    type: Literal["market"] = "market"
+    type: Literal["market", "limit"] = "market"
 
 
 class PriceRequest(BaseModel):
