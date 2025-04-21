@@ -218,6 +218,8 @@ class Bybit:
 
         if order_info.leverage is not None:
             self.set_leverage(order_info.leverage, symbol)
+
+        price = order_info.price if order_info.type.lower() == "limit" else None
         try:
             result = retry(
                 self.client.create_order,
@@ -225,7 +227,7 @@ class Bybit:
                 order_info.type.lower(),
                 order_info.side,
                 abs(entry_amount),
-                None,
+                price,
                 params,
                 order_info=order_info,
                 max_attempts=5,
@@ -261,7 +263,9 @@ class Bybit:
                 elif order_info.is_close:
                     position_idx = 1
                     params = {"reduceOnly": True, "position_idx": position_idx}
-
+                    
+        price = order_info.price if order_info.type.lower() == "limit" else None
+        
         try:
             result = retry(
                 self.client.create_order,
@@ -269,7 +273,7 @@ class Bybit:
                 order_info.type.lower(),
                 order_info.side,
                 abs(close_amount),
-                None,
+                price,
                 params,
                 order_info=order_info,
                 max_attempts=5,
