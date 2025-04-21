@@ -247,16 +247,16 @@ class Bybit:
         close_amount = self.get_amount(order_info)
 
         if order_info.type == "cancel":
-        try:
-            open_orders = self.client.fetch_open_orders(symbol)
-            if open_orders:
-                for o in open_orders:
-                    if o["side"].lower() == order_info.side.lower():
-                        self.client.cancel_order(o["id"], symbol)
-                        print(f"Cancelled open order: {o['id']}")
-        except Exception as e:
-            print(f"Can't cancel open order: {e}")
-        return
+            try:
+                open_orders = self.client.fetch_open_orders(symbol)
+                if open_orders:
+                    for o in open_orders:
+                        if o["side"].lower() == order_info.side.lower():
+                            self.client.cancel_order(o["id"], symbol)
+                            print(f"Cancelled open order: {o['id']}")
+            except Exception as e:
+                print(f"Can't cancel open order: {e}")
+            return
 
         if self.position_mode == "one-way":
             params = {"reduceOnly": True, "position_idx": 0}
