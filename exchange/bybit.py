@@ -273,7 +273,7 @@ class Bybit:
                     if o["side"].lower() == "buy":
                         self.client.cancel_order(o["id"], symbol)
         except Exception as e:
-            print(f"미체결 주문 조회/취소 중 오류 발생: {e}")
+            print(f"Can't cancel for open order: {e}")
         
         try:
             result = retry(
