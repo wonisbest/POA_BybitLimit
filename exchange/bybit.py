@@ -246,17 +246,7 @@ class Bybit:
         symbol = self.order_info.unified_symbol
         close_amount = self.get_amount(order_info)
 
-        if order_info.order_name.lower() == "cancel":
-            try:
-                open_orders = self.client.fetch_open_orders(symbol)
-                if open_orders:
-                    for o in open_orders:
-                        if o["side"].lower() == order_info.side.lower():
-                            self.client.cancel_order(o["id"], symbol)
-                            print(f"Cancelled open order: {o['id']}")
-            except Exception as e:
-                print(f"Can't cancel open order: {e}")
-            return
+
 
         if self.position_mode == "one-way":
             params = {"reduceOnly": True, "position_idx": 0}
@@ -303,6 +293,40 @@ class Bybit:
             )
             # order_amount = self.get_order_amount(result["id"], order_info)
             # result["amount"] = order_amount
+            return result
+        except Exception as e:
+            raise error.OrderError(e, self.order_info)
+
+    def cancel_order(self, order_info: MarketOrder):
+        from exchange.pexchange import retry
+
+        symbol = order_info.unified_symbol
+        order_id = order_info.order_id
+
+        if order_info.type.lower() == "cancel":
+            try:
+                open_orders = self.client.fetch_open_orders(symbol)
+                if open_orders:
+                    for o in open_orders:
+                        if o["side"].lower() == order_info.side.lower():
+                            self.client.cancel_order(o["id"], symbol)
+                            print(f"Cancelled open order: {o['id']}")
+            except Exception as e:
+                print(f"Can't cancel open order: {e}")
+            return
+
+        
+        try:
+            result = retry(
+                self.client.cancel_order,
+                order_id,
+                symbol,
+                order_info.type.lower(),
+                order_info=order_info,
+                max_attempts = 5,
+                delay = 0.1,
+                instance = self,
+            )
             return result
         except Exception as e:
             raise error.OrderError(e, self.order_info)
