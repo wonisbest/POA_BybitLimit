@@ -170,6 +170,8 @@ async def order(order_info: MarketOrder, background_tasks: BackgroundTasks):
         bot = get_bot(exchange_name, order_info.kis_number)
         bot.init_info(order_info)
         if bot.order_info.is_crypto:
+            if bot.order_info.is_cancel:
+                order_result = bot.cancel_order(bot.order_info)
             if bot.order_info.is_entry:
                 order_result = bot.market_entry(bot.order_info)
             elif bot.order_info.is_close:
