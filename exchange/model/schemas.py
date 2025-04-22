@@ -145,6 +145,7 @@ def get_extra_order_info(order_info):
         "is_close": None,
         "is_buy": None,
         "is_sell": None,
+        "is_cancel": None,
     }
     if order_info["exchange"] in CRYPTO_EXCHANGES:
         extra_order_info["is_crypto"] = True
@@ -174,6 +175,8 @@ def get_extra_order_info(order_info):
         extra_order_info["is_buy"] = True
     elif order_info["side"] == "sell":
         extra_order_info["is_sell"] = True
+    if order_info["type"] == "cancel":
+        extra_order_info["is_cancel"] = True
 
     return extra_order_info
 
@@ -218,6 +221,7 @@ class OrderRequest(BaseModel):
     is_coinm: bool | None = None
     is_entry: bool | None = None
     is_close: bool | None = None
+    is_cancel: bool | None = None
     is_buy: bool | None = None
     is_sell: bool | None = None
     is_total: bool | None = None
