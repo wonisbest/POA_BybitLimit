@@ -175,8 +175,6 @@ def get_extra_order_info(order_info):
         extra_order_info["is_buy"] = True
     elif order_info["side"] == "sell":
         extra_order_info["is_sell"] = True
-    if order_info["type"] == "cancel":
-        extra_order_info["is_cancel"] = True
 
     return extra_order_info
 
