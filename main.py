@@ -160,10 +160,26 @@ async def order(order_info: MarketOrder, background_tasks: BackgroundTasks):
                     continue
                 try:
                     bot.init_info(order_info)
-                    result = bot.market_entry(order_info)
-                    background_tasks.add_task(log,f"BYBIT{i}", result, order_info)
+                    
+                    if bot.order_info.is_crypto:
+                        result = None
+                        if bot.order_info.is_cancel:
+                            result = bot.cancel_order(bot.order_info)
+                        elif bot.order_info.is_entry:
+                            # 롱 포지션 진입 시
+                            result = bot.market_entry(bot.order_info)
+                        elif bot.order_info.is_close:
+                            # 롱 포지션 청산 시 (좀비 주문 취소 실행)
+                            result = bot.market_close(bot.order_info)
+                            
+                        if result:
+                            background_tasks.add_task(log, f"BYBIT{i}", result, order_info)
+                        else:
+                            print(f">>> WARNING: BYBIT{i}에 대해 실행된 작업이 없습니다.")
                 except Exception as e:
                     print(f">>>> ERROR: BYBIT{i} failed -  {e}")
+                    error_msg = get_error(e)
+                    background_tasks.add_task(log_error, "\n".join(error_msg), order_info)
             return {"result": "success"}
 
 
