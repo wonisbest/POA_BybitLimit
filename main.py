@@ -178,8 +178,8 @@ async def order(order_info: MarketOrder, background_tasks: BackgroundTasks):
                             print(f">>> WARNING: BYBIT{i}에 대해 실행된 작업이 없습니다.")
                 except Exception as e:
                     print(f">>>> ERROR: BYBIT{i} failed -  {e}")
-                    error_msg = get_error(e)
-                    background_tasks.add_task(log_error, "\n".join(error_msg), order_info)
+                    #error_msg = get_error(e)
+                    #background_tasks.add_task(log_error, "\n".join(error_msg), order_info)
             return {"result": "success"}
 
 
