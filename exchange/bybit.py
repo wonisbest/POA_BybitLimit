@@ -84,8 +84,8 @@ class Bybit:
             and (self.order_info.is_buy or self.order_info.is_sell)
         ):
             balance_by_base = self.client.fetch_balance().get(base)
-            free_balance_by_base = balance_by_base.get("free") or balance_by_base.get("total") if not self.order_info.is_total else balance_by_base.get("total")
-
+            #free_balance_by_base = balance_by_base.get("free") or balance_by_base.get("total") if not self.order_info.is_total else balance_by_base.get("total")
+            free_balance_by_base = balance_by_base.get("total")
         if free_balance_by_base is None or free_balance_by_base == 0:
             raise error.FreeAmountNoneError()
         return free_balance_by_base
@@ -330,3 +330,4 @@ class Bybit:
             return result
         except Exception as e:
             raise error.OrderError(e, self.order_info)
+
